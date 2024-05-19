@@ -6,15 +6,26 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@AllArgsConstructor
 public class RabbitMQConfig {
-    private final ConnectionFactory connectionFactory;
+   // private final ConnectionFactory connectionFactory;
 
-    @Bean
+
+    @Value("${rabbitmq.queue.name}")
+    private String queueName;
+
+    @Value("${rabbitmq.exchange.name}")
+    private String exchangeName;
+
+    @Value("${rabbitmq.routing.keyname}")
+    private String routingKey;
+
+  /*  @Bean
     public AmqpTemplate amqpTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
@@ -27,18 +38,18 @@ public class RabbitMQConfig {
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         return  factory;
-    }
+    }*/
 
     //TODO make apps variable
     @Bean
     public Queue createTestQueue() {
-        return new Queue("testing-first-queue");
+        return new Queue(queueName);
     }
 
 
     @Bean
     public TopicExchange exchange() {
-        return new TopicExchange("first-topic-exchange");
+        return new TopicExchange(exchangeName);
     }
 
 
@@ -46,6 +57,6 @@ public class RabbitMQConfig {
     public Binding binding() {
         return BindingBuilder.bind(createTestQueue())
                 .to(exchange())
-                .with("first-test-routing-key");
+                .with(routingKey);
     }
 }
