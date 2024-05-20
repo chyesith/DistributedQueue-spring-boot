@@ -7,11 +7,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RabbitMQConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQConsumer.class);
+//    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQConsumer.class);
+//
+//    @RabbitListener(queues = {"${rabbitmq.queue.name}"})
+//    public void processHighPriorityMessage(String message){
+//        LOGGER.info(String.format("Received message -> %s" , message));
+//    }
+//
+//
+//    @RabbitListener(queues = {"${rabbitmq.queue.name}"})
+//    public void processMediumPriorityMessage(String message){
+//        LOGGER.info(String.format("Received message -> %s" , message));
+//    }
+//
+//
+//    @RabbitListener(queues = {"${rabbitmq.queue.name}"})
+//    public void processLowPriorityMessage(String message){
+//        LOGGER.info(String.format("Received message -> %s" , message));
+//    }
 
-    @RabbitListener(queues = {"${rabbitmq.queue.nam}"})
-    public void consume(String message){
-        LOGGER.info(String.format("Received message -> %s" , message));
-    }
 
 }

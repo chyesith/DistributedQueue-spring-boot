@@ -25,6 +25,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.routing.keyname}")
     private String routingKey;
 
+    @Value("${rabbitmq.queue.max.priority}")
+    private int maxPriority;
+
   /*  @Bean
     public AmqpTemplate amqpTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -40,10 +43,12 @@ public class RabbitMQConfig {
         return  factory;
     }*/
 
-    //TODO make apps variable
+
     @Bean
     public Queue createTestQueue() {
-        return new Queue(queueName);
+        //make priority queue using variable that configurable
+        return QueueBuilder.durable(queueName)
+                .maxPriority(maxPriority).build();
     }
 
 
