@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class RabbitMQProducer {
 
         Message rabbitMQMessage = MessageBuilder.withBody(message.getMessage().getBytes())
                 .setMessageId(messageId)
+                .setDeliveryMode(MessageDeliveryMode.PERSISTENT)
                 .setPriority(message.getPriority())
                 .build();
 
