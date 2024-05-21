@@ -1,10 +1,70 @@
 services:
-  rabbitmq:
+  rabbitmq1:
     image: "rabbitmq:management-alpine"
+    hostname: rabbitmq1
     environment:
-      - "RABBITMQ_DEFAULT_PASS=user"
-      - "RABBITMQ_DEFAULT_USER=myuser"
-    container_name: "rabbitmq-sb"
+      RABBITMQ_ERLANG_COOKIE: "secretcookie"
+      RABBITMQ_DEFAULT_USER: "myuser"
+      RABBITMQ_DEFAULT_PASS: "user"
     ports:
-      - "5672:5672"
       - "15672:15672"
+    networks:
+      - rabbitmq_network
+    volumes:
+      - ./rabbitmq1:/var/lib/rabbitmq
+    command: >
+      sh -c "
+        rabbitmq-server &
+        rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rabbitmq1.pid &&
+        tail -f /dev/null
+      "
+
+  rabbitmq2:
+    image: "rabbitmq:management-alpine"
+    hostname: rabbitmq2
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secretcookie"
+      RABBITMQ_DEFAULT_USER: "myuser"
+      RABBITMQ_DEFAULT_PASS: "user"
+    ports:
+      - "15673:15672"
+    networks:
+      - rabbitmq_network
+    volumes:
+      - ./rabbitmq2:/var/lib/rabbitmq
+    command: >
+      sh -c "
+        rabbitmq-server &
+        rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rabbitmq2.pid &&
+        tail -f /dev/null
+      "
+
+  rabbitmq_setup:
+    image: "rabbitmq:management-alpine"
+    hostname: rabbitmq_setup
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secretcookie"
+    networks:
+      - rabbitmq_network
+    depends_on:
+      - rabbitmq1
+      - rabbitmq2
+    command: >
+      sh -c "
+        sleep 15 &&
+        echo 'Stopping app on rabbitmq1' &&
+        rabbitmqctl -n rabbit@rabbitmq1 stop_app &&
+        echo 'Resetting rabbitmq1' &&
+        rabbitmqctl -n rabbit@rabbitmq1 reset &&
+        echo 'Joining rabbitmq1 to cluster with rabbitmq2' &&
+        rabbitmqctl -n rabbit@rabbitmq1 join_cluster rabbit@rabbitmq2 &&
+        echo 'Starting app on rabbitmq1' &&
+        rabbitmqctl -n rabbit@rabbitmq1 start_app &&
+        echo 'Setting HA policy' &&
+        rabbitmqctl -n rabbit@rabbitmq1 set_policy ha-all '.*' '{\"ha-mode\":\"all\"}' &&
+        tail -f /dev/null
+      "
+
+networks:
+  rabbitmq_network:
+    driver: bridge

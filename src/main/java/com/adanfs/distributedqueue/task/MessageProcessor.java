@@ -5,7 +5,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
 public class MessageProcessor {
 
-    private static final int MAX_RETRIES = 5;
+    private static final int MAX_RETRIES = 10;
     private static final int BASE_DELAY_MS = 1000; //
 
     @RabbitListener(queues = "${rabbitmq.queue.name}")
