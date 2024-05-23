@@ -17,6 +17,7 @@ public class StatusController {
         this.statusService = statusService;
     }
 
+
     @GetMapping("/status/{taskId}")
     public ResponseEntity<Task> statusCheck(@PathVariable String id){
         try {
