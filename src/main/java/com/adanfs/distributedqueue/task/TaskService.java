@@ -1,7 +1,13 @@
 package com.adanfs.distributedqueue.task;
 
-import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Service
 public interface TaskService {
+
+
+    Task getTaskStatusById(String id);
+
+    Map<TaskStatus , List<Task>> getTaskByStatus(TaskStatus status);
 }
