@@ -1,6 +1,4 @@
-package com.adanfs.distributedqueue.task;
-
-import lombok.Data;
+package com.adanfs.distributedqueue.status;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.adanfs.distributedqueue.consumer;
+package com.adanfs.distributedqueue.worker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,13 +8,13 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RabbitMQConsumer {
+public class WorkerServiceImpl implements WorkerService {
 
     private static final int MAX_RETRIES = 5;
     private static final long INITIAL_BACKOFF = 1000;
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
 
     @RabbitListener(queues = {"${rabbitmq.queue.name}"})
     public void receiveMessage(String message) throws InterruptedException {
@@ -51,7 +51,7 @@ public class RabbitMQConsumer {
     //this implementation with spring retry
     @Retryable(value = {TransientFailureException.class}, maxAttempts = 5, backoff = @Backoff(delay = 1000, multiplier = 2))
     @RabbitListener(queues = {"${rabbitmq.queue.name}"})
-    public void processMessage(String message) {
+    public void processMessageWithRetry(String message) {
         try {
 
             LOGGER.info("Received message: {}", message);

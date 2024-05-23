@@ -1,4 +1,4 @@
-package com.adanfs.distributedqueue.task;
+package com.adanfs.distributedqueue.worker;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
