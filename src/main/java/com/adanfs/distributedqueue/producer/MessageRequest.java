@@ -1,4 +1,4 @@
-package com.adanfs.distributedqueue.task;
+package com.adanfs.distributedqueue.producer;
 
 import lombok.Data;
 

@@ -1,6 +1,5 @@
 package com.adanfs.distributedqueue.producer;
 
-import com.adanfs.distributedqueue.task.MessageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -14,9 +13,9 @@ import java.util.UUID;
 
 
 @Service
-public class RabbitMQProducer {
+public class ProducerServiceImpl implements ProducerService {
 
-     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQProducer.class);
+     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerServiceImpl.class);
 
     @Value("${rabbitmq.queue.name}")
     private String queueName;
@@ -30,11 +29,12 @@ public class RabbitMQProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public RabbitMQProducer(RabbitTemplate rabbitTemplate) {
+    public ProducerServiceImpl(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
 
+    @Override
     public String sendMessage(MessageRequest message){
         //TODO make proper id
         String messageId = UUID.randomUUID().toString();
