@@ -48,7 +48,7 @@ public class WorkerServiceImpl implements WorkerService {
 
 
 
-    //this implementation with spring retry
+   // this implementation with spring retry
     @Retryable(value = {TransientFailureException.class}, maxAttempts = 5, backoff = @Backoff(delay = 1000, multiplier = 2))
     @RabbitListener(queues = {"${rabbitmq.queue.name}"})
     public void processMessageWithRetry(String message) {
