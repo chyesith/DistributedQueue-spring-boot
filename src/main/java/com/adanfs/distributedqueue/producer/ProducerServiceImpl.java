@@ -50,4 +50,6 @@ public class ProducerServiceImpl implements ProducerService {
         rabbitTemplate.convertAndSend(exchangeName,routingKey , rabbitMQMessage);
         return messageId;
     }
+
+
 }
